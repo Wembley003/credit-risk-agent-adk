@@ -25,7 +25,7 @@ Reglas:
 
 root_agent = Agent(
     name="credit_risk_agent",
-    model="gemini-2.0-flash",
+    model="gemini-3.6-flash",
     description="Agente que analiza una cartera de crédito: exposición, pérdida esperada, PD y morosidad por segmento.",
     instruction=INSTRUCCION,
     tools=[resumen_cartera, desglose_por_segmento, mayores_exposiciones, creditos_vencidos],

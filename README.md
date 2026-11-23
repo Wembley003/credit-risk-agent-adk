@@ -111,7 +111,7 @@ datos, reemplaza ese CSV manteniendo las mismas columnas.
 
 ## Notas
 
-- El modelo es `gemini-2.0-flash`. Si Google cambia el nombre del modelo,
+- El modelo es `gemini-3.6-flash` (actualizado el 22 nov 2026: Google retiró `gemini-2.0-flash`; `gemini-2.5-flash` ya no está disponible para usuarios nuevos; `gemini-3.7-flash` y `gemini-3.8-flash` estaban saturados con 503; `gemini-3.6-flash` verificado funcionando). Si Google cambia el nombre del modelo,
   actualízalo en `credit_risk_agent/agent.py`.
 - La pérdida esperada se calcula como EL = EAD × PD × LGD; la PD ponderada y
   la morosidad se ponderan por exposición (EAD).
