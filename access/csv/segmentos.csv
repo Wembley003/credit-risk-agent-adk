@@ -1,0 +1,5 @@
+id,snapshot_id,segmento,numero_creditos,ead_total,perdida_esperada,pd_ponderada,morosidad_pct
+1,1,Consumo,6,1200000.0,52620.0,0.0706,41.67
+2,1,Hipotecario,6,6150000.0,44925.0,0.0248,22.76
+3,1,PyME,6,9900000.0,192900.0,0.0445,34.34
+4,1,Tarjeta,6,705000.0,68150.0,0.134,45.39

@@ -1,4 +1,6 @@
-"""Demo sin llave de API: ejecuta las herramientas del agente y muestra las cifras.
+"""
+Capa: Cliente (presentación) — la demo que ejecuta las herramientas y muestra las cifras sin llave de API.
+Demo sin llave de API: ejecuta las herramientas del agente y muestra las cifras.
 
 Para hablar con el agente (con Gemini) sigue el README: consigue una llave
 gratuita en Google AI Studio y corre `adk web` o `adk run`.

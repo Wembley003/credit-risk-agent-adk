@@ -1,1 +1,2 @@
 google-adk>=2.0,<3.0
+openpyxl>=3.1

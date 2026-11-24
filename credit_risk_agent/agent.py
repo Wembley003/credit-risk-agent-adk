@@ -1,4 +1,6 @@
-"""Agente de análisis de cartera de crédito con Google ADK y Gemini.
+"""
+Capa: Cliente (presentación) — el que pregunta y responde, usando solo las herramientas.
+Agente de análisis de cartera de crédito con Google ADK y Gemini.
 
 El agente responde preguntas en español sobre la cartera de ejemplo
 (`data/portfolio_sample.csv`) usando herramientas de Python para calcular

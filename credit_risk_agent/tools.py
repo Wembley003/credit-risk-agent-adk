@@ -1,4 +1,6 @@
-"""Herramientas del agente: cálculo de métricas de cartera de crédito.
+"""
+Capa: Reglas de negocio — las cifras de la cartera, calculadas en Python puro. Las herramientas son además la superficie de consulta del agente: por ellas pregunta a la cartera.
+Herramientas del agente: cálculo de métricas de cartera de crédito.
 
 Son funciones puras de Python (sin llamadas al modelo), por eso se pueden
 probar sin llave de API. El agente las usa a través de ADK: Gemini decide
@@ -7,29 +9,17 @@ cuándo llamarlas y redacta la respuesta con sus resultados.
 
 from __future__ import annotations
 
-import csv
-from pathlib import Path
+from .data import DATA_PATH, _cargar_cartera, cargar_cartera
 
-DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "portfolio_sample.csv"
-
-
-def _cargar_cartera() -> list[dict]:
-    """Lee el CSV de ejemplo y devuelve la lista de créditos."""
-    with open(DATA_PATH, newline="", encoding="utf-8") as f:
-        filas = list(csv.DictReader(f))
-    cartera = []
-    for fila in filas:
-        cartera.append(
-            {
-                "id_credito": fila["id_credito"],
-                "segmento": fila["segmento"],
-                "ead": float(fila["ead"]),
-                "pd": float(fila["pd"]),
-                "lgd": float(fila["lgd"]),
-                "estatus": fila["estatus"],
-            }
-        )
-    return cartera
+__all__ = [
+    "DATA_PATH",
+    "_cargar_cartera",
+    "cargar_cartera",
+    "resumen_cartera",
+    "desglose_por_segmento",
+    "mayores_exposiciones",
+    "creditos_vencidos",
+]
 
 
 def _perdida_esperada(credito: dict) -> float:

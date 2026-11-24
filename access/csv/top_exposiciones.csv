@@ -1,0 +1,6 @@
+id,snapshot_id,puesto,id_credito,segmento,ead,pd,lgd,perdida_esperada,estatus
+1,1,1,P-003,PyME,2500000.0,0.06,0.45,67500.0,vencido
+2,1,2,P-001,PyME,2000000.0,0.03,0.4,24000.0,vigente
+3,1,3,P-002,PyME,1800000.0,0.04,0.4,28800.0,vigente
+4,1,4,H-003,Hipotecario,1500000.0,0.015,0.25,5625.0,vigente
+5,1,5,P-006,PyME,1500000.0,0.03,0.4,18000.0,vigente

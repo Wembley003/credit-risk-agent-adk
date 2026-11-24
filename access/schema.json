@@ -1,0 +1,171 @@
+{
+  "tables": [
+    {
+      "name": "snapshots",
+      "rows": 1,
+      "columns": [
+        {
+          "name": "id",
+          "type": "LONG"
+        },
+        {
+          "name": "created_at",
+          "type": "TEXT",
+          "length": 50
+        },
+        {
+          "name": "numero_creditos",
+          "type": "LONG"
+        },
+        {
+          "name": "ead_total",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "perdida_esperada_total",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "pd_ponderada",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "cartera_vencida",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "morosidad_pct",
+          "type": "DOUBLE"
+        }
+      ],
+      "csv": "/home/hatch/workspace/credit-risk-agent-adk/access/csv/snapshots.csv"
+    },
+    {
+      "name": "segmentos",
+      "rows": 4,
+      "columns": [
+        {
+          "name": "id",
+          "type": "LONG"
+        },
+        {
+          "name": "snapshot_id",
+          "type": "LONG"
+        },
+        {
+          "name": "segmento",
+          "type": "TEXT",
+          "length": 50
+        },
+        {
+          "name": "numero_creditos",
+          "type": "LONG"
+        },
+        {
+          "name": "ead_total",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "perdida_esperada",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "pd_ponderada",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "morosidad_pct",
+          "type": "DOUBLE"
+        }
+      ],
+      "csv": "/home/hatch/workspace/credit-risk-agent-adk/access/csv/segmentos.csv"
+    },
+    {
+      "name": "top_exposiciones",
+      "rows": 5,
+      "columns": [
+        {
+          "name": "id",
+          "type": "LONG"
+        },
+        {
+          "name": "snapshot_id",
+          "type": "LONG"
+        },
+        {
+          "name": "puesto",
+          "type": "LONG"
+        },
+        {
+          "name": "id_credito",
+          "type": "TEXT",
+          "length": 50
+        },
+        {
+          "name": "segmento",
+          "type": "TEXT",
+          "length": 50
+        },
+        {
+          "name": "ead",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "pd",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "lgd",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "perdida_esperada",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "estatus",
+          "type": "TEXT",
+          "length": 50
+        }
+      ],
+      "csv": "/home/hatch/workspace/credit-risk-agent-adk/access/csv/top_exposiciones.csv"
+    },
+    {
+      "name": "vencidos",
+      "rows": 8,
+      "columns": [
+        {
+          "name": "id",
+          "type": "LONG"
+        },
+        {
+          "name": "snapshot_id",
+          "type": "LONG"
+        },
+        {
+          "name": "id_credito",
+          "type": "TEXT",
+          "length": 50
+        },
+        {
+          "name": "segmento",
+          "type": "TEXT",
+          "length": 50
+        },
+        {
+          "name": "ead",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "pd",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "lgd",
+          "type": "DOUBLE"
+        }
+      ],
+      "csv": "/home/hatch/workspace/credit-risk-agent-adk/access/csv/vencidos.csv"
+    }
+  ]
+}

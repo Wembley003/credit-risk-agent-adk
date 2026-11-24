@@ -82,7 +82,53 @@ pytest
 ```
 
 Las pruebas recalculan cada métrica directamente desde el CSV, por un camino
-independiente al del código del agente.
+independiente al del código del agente. **21 pruebas, todas en verde**,
+incluidas las de capas (`tests/test_layers.py`): verifican que el
+agente solo usa las cuatro herramientas, que las reglas dan las cifras
+conocidas y que las capas no se mezclan (las reglas corren con openpyxl
+y sqlite3 bloqueados).
+
+```bash
+./run_tests.sh   # lo mismo, buscando el venv solo
+```
+
+## Guardar snapshots: SQLite + Excel (nuevo)
+
+El agente calcula las métricas cada vez que se le pregunta, pero no
+guarda nada: si mañana cambia el CSV, el número de hoy se pierde.
+Ahora cada snapshot queda guardado en SQLite (`persistence.py`) con
+el resumen, el desglose por segmento, las mayores exposiciones y los
+créditos vencidos, y se exporta a Excel (`excel_export.py`) con
+cuatro hojas. Las cifras salen de las mismas herramientas que usa el
+agente para responder, así que lo guardado es exactamente lo que el
+agente diría si le preguntaran.
+
+## Tablas dinámicas y Access
+
+El Excel lleva además dos **tablas dinámicas nativas**: «Dinámica por
+segmento» (EAD, pérdida esperada y créditos por segmento) y «Dinámica
+por estatus» (EAD, pérdida esperada y número de créditos vigente /
+vencido dentro del top de exposiciones). Son nativas —definición,
+caché y registros dentro del `.xlsx`—, así que Excel las filtra y
+recalcula al abrir; si una hoja de origen no tiene filas, su pivote se
+salta sin romper la exportación. El helper que las construye está en
+`credit_risk_agent/pivot_table.py`.
+
+Y hay una base **real** de Access en `access/credit-risk-agent-adk.accdb`
+(formato ACE14): las 4 tablas del snapshot con sus tipos y filas, lista
+para abrir en Access. Se regenera con `./access/build_access.sh
+snapshots.db credit-risk-agent-adk.accdb` (vuelca a CSV + schema con
+`dump_access.py`, construye con Jackcess en Java y verifica con
+mdbtools); los detalles y la nota sobre subir el `.accdb` binario por
+web están en `access/README.md`. El DDL de referencia sigue en
+`sql/schema_access.sql`.
+
+```python
+from credit_risk_agent import persistence, excel_export
+
+snap_id = persistence.store_snapshot("snapshots.db")
+excel_export.export_workbook("snapshots.db", "cartera.xlsx")
+```
 
 ## Estructura
 
@@ -91,16 +137,56 @@ credit-risk-agent-adk/
 ├── credit_risk_agent/
 │   ├── __init__.py      # expone root_agent (lo que busca ADK)
 │   ├── agent.py         # definición del agente: modelo, instrucción, herramientas
-│   └── tools.py         # cálculo de métricas (EAD, EL, PD, morosidad)
+│   ├── tools.py         # cálculo de métricas (EAD, EL, PD, morosidad)
+│   ├── data.py          # lectura del CSV (la única puerta a los datos)
+│   ├── persistence.py   # SQLite: snapshots de la cartera
+│   ├── excel_export.py  # exporta un snapshot a Excel (4 hojas + 2 pivotes)
+│   └── pivot_table.py   # tablas dinámicas nativas de Excel (openpyxl)
+├── access/              # .accdb real + CSV/schema + constructor (Jackcess)
+│   ├── credit-risk-agent-adk.accdb
+│   ├── dump_access.py   # vuelca SQLite a CSV + schema
+│   ├── AccessBuilder.java / build_access.sh  # construyen el .accdb
+│   └── README.md        # cómo regenerarlo y cómo subirlo a GitHub
+├── sql/
+│   └── schema_access.sql  # DDL para Access (solo esquema, sin probar en Access)
 ├── data/
 │   └── portfolio_sample.csv   # cartera sintética de ejemplo (24 créditos)
 ├── tests/
-│   └── test_tools.py    # pruebas de las herramientas (sin llave de API)
+│   ├── test_tools.py    # pruebas de las herramientas (sin llave de API)
+│   ├── test_persistence.py
+│   ├── test_excel_export.py
+│   ├── test_access.py
+│   └── test_layers.py   # las tres capas no se mezclan + cifras conocidas
+├── run_tests.sh         # corre pytest buscando el venv
 ├── demo.py              # muestra las cifras sin llamar a Gemini
 ├── requirements.txt
 ├── .env.example
 └── LICENSE
 ```
+
+## Capas
+
+Tres capas; Bronce/Plata/Oro **no** aplica aquí (el agente lee un solo
+CSV pequeño al vuelo y calcula las métricas en el momento; no hay
+staging crudo → limpio → agregado que ordenar, así que forzarlo sería
+ponerle nombres a algo que no existe):
+
+- **Capa del cliente (presentación)** — `agent.py` (la interfaz con la
+  que habla el usuario) y `demo.py`. Nunca tocan los datos ni el
+  almacenamiento directo: solo llaman a las herramientas.
+- **Capa de reglas de negocio** — `tools.py`: las fórmulas (EL = EAD x
+  PD x LGD, PD ponderada, morosidad, desglose por segmento). Son
+  funciones puras de Python, probables sin llave de API.
+- **Capa de consultas o análisis** — `data.py` (la lectura del CSV),
+  `persistence.py` (snapshots en SQLite), `excel_export.py` y
+  `pivot_table.py` (más `sql/schema_access.sql` y `access/`).
+
+Nota de frontera: en este proyecto las herramientas SON la superficie
+de consulta — el agente le pregunta a la cartera a través de ellas,
+no con SQL. Por eso `tools.py` vive en Reglas (es dueño de las
+fórmulas) y el lado de lectura/guardado vive en Consultas. La única
+dependencia permitida entre esas dos capas es que las reglas lean los
+datos (`data.py`); nunca tocan el almacenamiento.
 
 ## Datos
 
